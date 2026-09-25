@@ -55,15 +55,22 @@ python -m http.server 8080
   - 推送 `main` 自動部署
 - `docs/` 不發布
 
+## 加一關
+
+編輯 `site/levels.json`，在 `levels` 陣列加一個物件（`id`、`title`、`path`、`start`、`nodes`、`rule`、`success`、`failureScience`、`missing`、`successMotion`），再加對應路徑的薄殼 `index.html`（`data-level-id` 對上、引用 `../game.js`）。尚無出題表單或後台。
+
 ## 檔案
 
 | 路徑 | 說明 |
 | --- | --- |
-| `site/index.html` | 藍鵲播種（孩子頁，凍結） |
-| `site/barbet/index.html` | 五色鳥關 |
-| `site/macaque/index.html` | 台灣獼猴關 |
-| `site/butterfly/index.html` | 寬尾鳳蝶關 |
+| `site/levels.json` | 關卡／題目清單（唯一真相來源） |
+| `site/game.js` | 共用遊戲邏輯 |
+| `site/game.css` | 共用樣式 |
+| `site/index.html` | 藍鵲播種薄殼（孩子頁） |
+| `site/barbet/index.html` | 五色鳥薄殼 |
+| `site/macaque/index.html` | 台灣獼猴薄殼 |
+| `site/butterfly/index.html` | 寬尾鳳蝶薄殼 |
 | `site/favicon.svg` | 分頁圖示（原創幾何標記） |
-| `site/teacher/index.html` | 老師頁（含關卡連結） |
+| `site/teacher/index.html` | 老師頁（課堂步驟＋關卡連結） |
 | `docs/` | 設計文件（不進靜態站） |
 | `render.yaml` | Render 靜態站設定 |

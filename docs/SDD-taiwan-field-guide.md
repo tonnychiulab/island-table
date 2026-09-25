@@ -220,6 +220,8 @@
 
 另頁列出山蘇、愛玉、台灣黑熊、台灣藍鵲的公開事實來源。寫**機構＋事實**即可（例如林業及自然保育署、特有生物研究保育中心）；不確定具體頁面時不捏造標題或 URL。
 
+**課堂進行步驟**只放在 `site/teacher/index.html`（投影遊戲、示範失敗、請孩子成功、下一組再玩、不要投影老師頁）。不寫進任何遊戲頁。
+
 ### 7.1a 三關教室擴充（已決定；不改 round 1）
 
 > **`site/index.html`（藍鵲播種）規則凍結。** 不加「下一關」、不加連到 `/teacher` 或新關卡的按鈕。新關卡頁彼此不互連、也不連 `/teacher`。老師只從 `/teacher` 開各關。
@@ -244,8 +246,9 @@
 
 寬尾鳳蝶關：**不**指定花的種名；**不**說蝴蝶傳粉愛玉或榕果。
 
-**老師頁（`/teacher`）才放連結與備課註：**
+**老師頁（`/teacher`）才放課堂步驟、連結與備課註：**
 
+- 課堂進行步驟（投影、示範失敗、請孩子成功、再玩一次、不要投影老師頁）只在老師頁。
 - 連結：站台根（藍鵲）、`/barbet`（五色鳥）、`/macaque`（台灣獼猴）、`/butterfly`（寬尾鳳蝶）。
 - 榕果指榕樹、雀榕這一類榕屬果實，不是愛玉；榕果傳粉是榕果小蜂，**不進投影句**。
 - 寬尾鳳蝶幼蟲野生食草是台灣檫樹；這一關投影只教訪花傳粉，不指定某一種花。
@@ -296,17 +299,28 @@
 ## 8. 共用資料與架構
 
 ```text
-site/index.html              藍鵲播種（凍結；孩子頁）
-site/barbet/index.html       五色鳥關（孩子頁）
-site/macaque/index.html      台灣獼猴關（孩子頁）
-site/butterfly/index.html    寬尾鳳蝶關（孩子頁）
+site/levels.json             關卡／題目清單（唯一真相來源；四關皆在此）
+site/game.js                 共用判定與互動（讀 levels.json＋頁面 data-level-id）
+site/game.css                共用畫面樣式
+site/index.html              藍鵲播種薄殼（孩子頁；路徑 /）
+site/barbet/index.html       五色鳥薄殼（孩子頁）
+site/macaque/index.html      台灣獼猴薄殼（孩子頁）
+site/butterfly/index.html    寬尾鳳蝶薄殼（孩子頁）
 site/favicon.svg             分頁圖示（原創幾何標記，非物種插圖）
-site/teacher/index.html      老師頁（關卡連結＋機構＋事實；遊戲頁不連過去）
+site/teacher/index.html      老師頁（課堂步驟＋關卡連結＋機構＋事實；遊戲頁不連過去）
 docs/                        設計文件（不發布到靜態站）
 atlas.json                   （後續）菜、物種、標籤、一句話、來源
 art/kenney/                  （後續）只放 CC0 原檔，不改作者中繼資料
 art/atlas/                   （後續）自製剪影與標籤
 ```
+
+### 8.1 關卡清單 `site/levels.json`（已決定）
+
+- **唯一真相來源**：四關（及之後老師要加的題）都是此檔的一個物件。公開 URL 仍為 `/`、`/barbet`、`/macaque`、`/butterfly`；薄殼頁只標 `data-level-id`。
+- 每關欄位：`id`、`title`、`path`、`start`（label＋color）、`nodes`（id、label、role、color）、`rule`、`success`、`failureScience`、`missing`、`successMotion`。
+- `rule`：`potPair`（藍鵲：兩植物齊且非黑熊＋鍋）或 `wrongNode`（錯節點在路線上即失敗）。
+- `successMotion`：`brighten`｜`seed`｜`pollen`（行為與 §7.1b 相同）。
+- **尚無**出題表單、登入或後台；加關＝編輯 JSON 再部署。老師頁持有課堂步驟，不放遊戲頁。
 
 一筆圖鑑最少欄位：`id`、`name_zh`、`name_latin`（生物才有）、`kind`（dish / plant / animal / fish / insect）、`tag`（food / protected / habitat）、`one_liner`、`source`、`links`（會觸發哪一款遊戲的哪個事件）。
 
@@ -391,7 +405,8 @@ art/atlas/                   （後續）自製剪影與標籤
 | 第一可玩切片 | **僅藍鵲播種一局**（第 7.1 節），不是夜市先做。 |
 | 這一局要教什麼 | 山蘇可炒、愛玉可做冰、藍鵲特有、播種是遊戲；動物受保護不能拿去煮（黑熊＋鍋才失敗）。 |
 | 引擎／託管 | 第一可玩用靜態 HTML，非 Godot、非 exe。見第 12 節。 |
-| 老師頁 | `/teacher`；遊戲頁無連結。 |
+| 老師頁 | `/teacher`；含課堂步驟；遊戲頁無連結。 |
+| 關卡資料 | `site/levels.json` 為題目清單；尚無出題表單／後台。 |
 | 授權與儲存庫 | MIT；公開 repo `island-table`；著作權 島嶼餐桌 2026。 |
 | 分頁圖示 | 見第 9.1 節：原創幾何標記；MIT；不取代物種剪影。 |
 

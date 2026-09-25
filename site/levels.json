@@ -1,0 +1,181 @@
+{
+  "entranceText": "幕後人：走岔一步不要緊，肯回頭便是正道。",
+  "levels": [
+    {
+      "id": "root",
+      "title": "藍鵲播種",
+      "path": "/",
+      "start": {
+        "id": "magpie",
+        "label": "藍鵲",
+        "color": "#1e6bb8",
+        "left": 90,
+        "top": 280,
+        "width": 160,
+        "height": 160,
+        "fontSize": 42
+      },
+      "nodes": [
+        {
+          "id": "sansu",
+          "label": "山蘇",
+          "role": "correct",
+          "color": "#2e8b57",
+          "left": 420,
+          "top": 160
+        },
+        {
+          "id": "aiyu",
+          "label": "愛玉",
+          "role": "correct",
+          "color": "#2e8b57",
+          "left": 420,
+          "top": 420
+        },
+        {
+          "id": "bear",
+          "label": "黑熊",
+          "role": "bear",
+          "color": "#2c2c2c",
+          "left": 780,
+          "top": 200
+        },
+        {
+          "id": "pot",
+          "label": "鍋",
+          "role": "pot",
+          "color": "#c0392b",
+          "left": 1000,
+          "top": 380
+        }
+      ],
+      "rule": "potPair",
+      "success": "山蘇可以炒來吃。愛玉果實可以做成愛玉冰。藍鵲是台灣特有的鳥。播種是遊戲。",
+      "failureScience": "有人以前靠山林生活，打獵有自己的規矩。現在這些動物受保護，遊戲裡不能拿去煮。",
+      "missing": {
+        "sansu": "還缺山蘇",
+        "aiyu": "還缺愛玉"
+      },
+      "successMotion": "brighten"
+    },
+    {
+      "id": "barbet",
+      "title": "五色鳥",
+      "path": "/barbet",
+      "start": {
+        "id": "animal",
+        "label": "五色鳥",
+        "color": "#2e8b57",
+        "left": 80,
+        "top": 270,
+        "width": 180,
+        "height": 180,
+        "fontSize": 40
+      },
+      "nodes": [
+        {
+          "id": "correct",
+          "label": "榕果",
+          "role": "correct",
+          "color": "#2e8b57",
+          "left": 520,
+          "top": 180
+        },
+        {
+          "id": "wrong",
+          "label": "山蘇",
+          "role": "wrong",
+          "color": "#8b5a2b",
+          "left": 900,
+          "top": 360
+        }
+      ],
+      "rule": "wrongNode",
+      "success": "五色鳥吃下榕果，種子到別處。這是帶走種子。",
+      "failureScience": "山蘇靠孢子，不是五色鳥播的。",
+      "missing": "還缺榕果。",
+      "successMotion": "seed"
+    },
+    {
+      "id": "macaque",
+      "title": "台灣獼猴",
+      "path": "/macaque",
+      "start": {
+        "id": "animal",
+        "label": "台灣獼猴",
+        "color": "#6e6e6e",
+        "left": 70,
+        "top": 255,
+        "width": 200,
+        "height": 200,
+        "fontSize": 34
+      },
+      "nodes": [
+        {
+          "id": "correct",
+          "label": "長葉木薑子",
+          "role": "correct",
+          "color": "#2e8b57",
+          "left": 470,
+          "top": 145,
+          "width": 230,
+          "height": 230,
+          "fontSize": 30
+        },
+        {
+          "id": "wrong",
+          "label": "花",
+          "role": "wrong",
+          "color": "#8b5a2b",
+          "left": 920,
+          "top": 360,
+          "fontSize": 40
+        }
+      ],
+      "rule": "wrongNode",
+      "success": "台灣獼猴把長葉木薑子的種子帶到別處。這是帶走種子。",
+      "failureScience": "連到花，不是帶走種子。",
+      "missing": "還缺長葉木薑子。",
+      "successMotion": "seed"
+    },
+    {
+      "id": "butterfly",
+      "title": "寬尾鳳蝶",
+      "path": "/butterfly",
+      "start": {
+        "id": "animal",
+        "label": "寬尾鳳蝶",
+        "color": "#1a1a1a",
+        "left": 70,
+        "top": 255,
+        "width": 200,
+        "height": 200,
+        "fontSize": 34,
+        "textColor": "#f0f0f0"
+      },
+      "nodes": [
+        {
+          "id": "correct",
+          "label": "花",
+          "role": "correct",
+          "color": "#2e8b57",
+          "left": 520,
+          "top": 180
+        },
+        {
+          "id": "wrong",
+          "label": "榕果",
+          "role": "wrong",
+          "color": "#8b5a2b",
+          "left": 900,
+          "top": 360
+        }
+      ],
+      "rule": "wrongNode",
+      "success": "寬尾鳳蝶幫花傳粉。",
+      "failureScience": "榕果不是寬尾鳳蝶傳的粉。",
+      "missing": "還缺花。",
+      "successMotion": "pollen"
+    }
+  ]
+}
