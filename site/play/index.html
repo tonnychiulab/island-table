@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../game.css" />
+  <title>島嶼餐桌 · 老師出題</title>
+</head>
+<body data-from-hash="1">
+  <div class="stage-wrap">
+    <div class="stage" id="stage">
+      <button type="button" id="fullscreen-btn" aria-label="全螢幕">全螢幕</button>
+      <h1 id="level-title">老師出題</h1>
+
+      <svg id="route-svg" viewBox="0 0 1280 720" preserveAspectRatio="none" aria-hidden="true">
+        <polyline id="route-line" points=""></polyline>
+      </svg>
+
+      <div id="nodes"></div>
+
+      <div id="message" role="status" aria-live="polite"></div>
+
+      <div class="controls">
+        <button type="button" id="btn-reset">重來</button>
+        <button type="button" id="btn-go" class="primary">出發</button>
+        <button type="button" id="btn-retry" class="hidden">再試一次</button>
+        <button type="button" id="btn-again" class="hidden">再玩一次</button>
+      </div>
+    </div>
+  </div>
+  <script src="../game.js"></script>
+</body>
+</html>

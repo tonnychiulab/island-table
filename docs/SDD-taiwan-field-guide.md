@@ -1,6 +1,6 @@
 # SDD：島嶼餐桌（台灣食物與特有物種三部曲）
 
-狀態：**已確認第一可玩版＋三關教室擴充**（藍鵲播種凍結；五色鳥／台灣獼猴／寬尾鳳蝶已定稿；Render 靜態站）；夜市七攤、七家灣規格保留為後續，本輪未改規則  
+狀態：**已確認第一可玩版＋三關教室擴充＋老師出題（/make → /play hash）**（藍鵲播種凍結；五色鳥／台灣獼猴／寬尾鳳蝶已定稿；Render 靜態站）；夜市七攤、七家灣規格保留為後續，本輪未改規則  
 日期：2026-09-25  
 範圍：三款可獨立遊玩、共用同一份圖鑑資料的小遊戲；**線上可玩：藍鵲播種（凍結）＋三關新教室地圖**
 
@@ -249,7 +249,7 @@
 **老師頁（`/teacher`）才放課堂步驟、連結與備課註：**
 
 - 課堂進行步驟（投影、示範失敗、請孩子成功、再玩一次、不要投影老師頁）只在老師頁。
-- 連結：站台根（藍鵲）、`/barbet`（五色鳥）、`/macaque`（台灣獼猴）、`/butterfly`（寬尾鳳蝶）。
+- 連結：站台根（藍鵲）、`/barbet`（五色鳥）、`/macaque`（台灣獼猴）、`/butterfly`（寬尾鳳蝶）、`/make`（我要出題）。
 - 榕果指榕樹、雀榕這一類榕屬果實，不是愛玉；榕果傳粉是榕果小蜂，**不進投影句**。
 - 寬尾鳳蝶幼蟲野生食草是台灣檫樹；這一關投影只教訪花傳粉，不指定某一種花。
 - 台灣獼猴關用長葉木薑子（頰囊帶走種子）；不要寫成愛玉。
@@ -299,15 +299,17 @@
 ## 8. 共用資料與架構
 
 ```text
-site/levels.json             關卡／題目清單（唯一真相來源；四關皆在此）
-site/game.js                 共用判定與互動（讀 levels.json＋頁面 data-level-id）
+site/levels.json             官方四關唯一真相來源（/、/barbet、/macaque、/butterfly）
+site/game.js                 共用判定與互動（官方：levels.json；老師關：/play 的 URL hash）
 site/game.css                共用畫面樣式
 site/index.html              藍鵲播種薄殼（孩子頁；路徑 /）
 site/barbet/index.html       五色鳥薄殼（孩子頁）
 site/macaque/index.html      台灣獼猴薄殼（孩子頁）
 site/butterfly/index.html    寬尾鳳蝶薄殼（孩子頁）
+site/make/index.html         老師出題表單（路徑 /make；不寫入 levels.json）
+site/play/index.html         老師關播放頁（路徑 /play；題目在 URL hash）
 site/favicon.svg             分頁圖示（原創幾何標記，非物種插圖）
-site/teacher/index.html      老師頁（課堂步驟＋關卡連結＋機構＋事實；遊戲頁不連過去）
+site/teacher/index.html      老師頁（課堂步驟＋關卡連結＋「我要出題」；遊戲頁不連過去）
 docs/                        設計文件（不發布到靜態站）
 atlas.json                   （後續）菜、物種、標籤、一句話、來源
 art/kenney/                  （後續）只放 CC0 原檔，不改作者中繼資料
@@ -316,11 +318,20 @@ art/atlas/                   （後續）自製剪影與標籤
 
 ### 8.1 關卡清單 `site/levels.json`（已決定）
 
-- **唯一真相來源**：四關（及之後老師要加的題）都是此檔的一個物件。公開 URL 仍為 `/`、`/barbet`、`/macaque`、`/butterfly`；薄殼頁只標 `data-level-id`。
+- **官方四關唯一真相來源**：`/`、`/barbet`、`/macaque`、`/butterfly` 皆由此檔；薄殼頁只標 `data-level-id`。老師**不**編輯此檔。
 - 每關欄位：`id`、`title`、`path`、`start`（label＋color）、`nodes`（id、label、role、color）、`rule`、`success`、`failureScience`、`missing`、`successMotion`。
 - `rule`：`potPair`（藍鵲：兩植物齊且非黑熊＋鍋）或 `wrongNode`（錯節點在路線上即失敗）。
 - `successMotion`：`brighten`｜`seed`｜`pollen`（行為與 §7.1b 相同）。
-- **尚無**出題表單、登入或後台；加關＝編輯 JSON 再部署。老師頁持有課堂步驟，不放遊戲頁。
+- 老師頁持有課堂步驟與官方關連結，不放遊戲頁。
+
+### 8.2 老師出題（已決定；無帳號）
+
+- **路徑**：`/make`（`site/make/index.html`）出題；產生的關在 `/play`（`site/play/index.html`）用 **URL hash** 承載題目，適合靜態站。不寫伺服器、不寫 localStorage、不改 `levels.json`。
+- **無登入／無帳號／無後台。**
+- 表單五欄必填（繁中大字）：動物名稱、對的對象、錯的對象、過關句、失敗句；另須勾選「這句我核對過：能不能吃、是帶走種子還是傳粉」後才能產生網址。
+- 老師把產生的 `/play#…` 網址在投影機打開。失敗時科學句用老師填的失敗句；其上一行仍固定「幕後人：走岔一步不要緊，肯回頭便是正道。」（老師不填這行）。
+- 判定用簡單 `wrongNode`（非藍鵲鍋規則）：只有正確節點成功；錯節點在路線上即失敗（即使也選了正確）；兩者都沒選則「還缺」＋正確標籤並保留路線。`successMotion: seed`。動物節點青綠色（非藍鵲藍）；正確綠、錯誤棕；起點不可點。按鈕同官方：全螢幕／重來／出發／再試一次／再玩一次。無音效、無藏鏡人。畫面字串用 `textContent`。過長 hash 拒絕並請改短句，不崩潰。
+- 老師頁只放「我要出題」連到 `/make`，不把表單嵌進老師頁。遊戲頁（含 `/play`）不連 `/teacher` 或 `/make`。
 
 一筆圖鑑最少欄位：`id`、`name_zh`、`name_latin`（生物才有）、`kind`（dish / plant / animal / fish / insect）、`tag`（food / protected / habitat）、`one_liner`、`source`、`links`（會觸發哪一款遊戲的哪個事件）。
 
@@ -329,7 +340,7 @@ art/atlas/                   （後續）自製剪影與標籤
 技術選擇（已決定，第一可玩）：
 
 - **靜態 HTML／CSS／JS**，無建置步驟、無 npm、無 Godot、無 Kenney 素材依賴。
-- 發布目錄：`site/`。遊戲：`site/index.html`（藍鵲）、`/barbet`、`/macaque`、`/butterfly`。老師頁：`site/teacher/index.html`（路徑 `/teacher`）。
+- 發布目錄：`site/`。遊戲：`site/index.html`（藍鵲）、`/barbet`、`/macaque`、`/butterfly`、`/play`（老師關）。老師頁：`site/teacher/index.html`（路徑 `/teacher`）；出題：`/make`。
 - 解析度：版面 **1280×720**（小視窗等比縮小）；老師用瀏覽器投影。
 - 文字：短句口語**繁體中文**（教室用）。英文之後再做。
 - 音效：v1 **靜音**。
@@ -389,7 +400,7 @@ art/atlas/                   （後續）自製剪影與標籤
 | 網域 | 預設用 onrender.com。除非學校打不開，否則不做自訂網域。 |
 | 原始碼 | **公開** GitHub 儲存庫，名稱 `island-table`。授權 **MIT**；著作權行：`Copyright (c) 2026 島嶼餐桌`（不寫個人姓名）。 |
 | `render.yaml` | `type: static`；`name: island-table`；`staticPublishPath: site`；無 build command；無環境變數；只部署 **main**。 |
-| 發布內容 | 發布 `site/`。遊戲：根路徑藍鵲、`/barbet`、`/macaque`、`/butterfly`。老師頁：`/teacher`（含各關連結）。**遊戲頁不連到 `/teacher`、也不互連。** `docs/` **不**發布。 |
+| 發布內容 | 發布 `site/`。遊戲：根路徑藍鵲、`/barbet`、`/macaque`、`/butterfly`、老師關 `/play`。老師頁：`/teacher`；出題：`/make`。**遊戲頁不連到 `/teacher` 或 `/make`、也不互連。** `docs/` **不**發布。 |
 | 全螢幕 | 左上「全螢幕」按鈕（Fullscreen API）；不強制進場全螢幕；不蓋住黑熊或鍋。 |
 
 建立 GitHub 儲存庫與 Render 服務需使用者帳號操作；程式與設定檔就緒後再連線部署。
@@ -405,8 +416,8 @@ art/atlas/                   （後續）自製剪影與標籤
 | 第一可玩切片 | **僅藍鵲播種一局**（第 7.1 節），不是夜市先做。 |
 | 這一局要教什麼 | 山蘇可炒、愛玉可做冰、藍鵲特有、播種是遊戲；動物受保護不能拿去煮（黑熊＋鍋才失敗）。 |
 | 引擎／託管 | 第一可玩用靜態 HTML，非 Godot、非 exe。見第 12 節。 |
-| 老師頁 | `/teacher`；含課堂步驟；遊戲頁無連結。 |
-| 關卡資料 | `site/levels.json` 為題目清單；尚無出題表單／後台。 |
+| 老師頁 | `/teacher`；含課堂步驟與「我要出題」；遊戲頁無連結。 |
+| 關卡資料 | 官方四關：`site/levels.json`。老師自訂：`/make` → `/play` hash URL；無帳號；須勾選科學核對。 |
 | 授權與儲存庫 | MIT；公開 repo `island-table`；著作權 島嶼餐桌 2026。 |
 | 分頁圖示 | 見第 9.1 節：原創幾何標記；MIT；不取代物種剪影。 |
 

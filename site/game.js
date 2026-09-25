@@ -365,6 +365,104 @@
     };
   }
 
+  var TEACHER_TEAL = "#0f766e";
+  var MAX_TEACHER_HASH = 3500;
+
+  function showBootError(text) {
+    var msg = document.getElementById("message");
+    if (msg) {
+      msg.className = "visible fail";
+      msg.textContent = text;
+    }
+  }
+
+  function levelFromTeacherPayload(p) {
+    return {
+      id: "teacher",
+      title: p.a,
+      start: {
+        id: "animal",
+        label: p.a,
+        color: TEACHER_TEAL,
+        left: 80,
+        top: 270,
+        width: 200,
+        height: 200,
+        fontSize: 36
+      },
+      nodes: [
+        {
+          id: "correct",
+          label: p.c,
+          role: "correct",
+          color: "#2e8b57",
+          left: 520,
+          top: 180
+        },
+        {
+          id: "wrong",
+          label: p.w,
+          role: "wrong",
+          color: "#8b5a2b",
+          left: 900,
+          top: 360
+        }
+      ],
+      rule: "wrongNode",
+      success: p.s,
+      failureScience: p.f,
+      missing: "還缺" + p.c + "。",
+      successMotion: "seed"
+    };
+  }
+
+  function parseTeacherHash(hash) {
+    var raw = (hash || "").replace(/^#/, "");
+    if (!raw) {
+      return { error: "empty" };
+    }
+    if (raw.length > MAX_TEACHER_HASH) {
+      return { error: "oversize" };
+    }
+    var data;
+    try {
+      data = JSON.parse(decodeURIComponent(raw));
+    } catch (e) {
+      return { error: "bad" };
+    }
+    if (!data || typeof data !== "object") return { error: "bad" };
+    var keys = ["a", "c", "w", "s", "f"];
+    var out = {};
+    for (var i = 0; i < keys.length; i++) {
+      var k = keys[i];
+      var v = data[k];
+      if (typeof v !== "string" || !v.trim()) return { error: "bad" };
+      out[k] = v.trim();
+    }
+    return { payload: out };
+  }
+
+  function bootFromHash() {
+    var parsed = parseTeacherHash(location.hash);
+    if (parsed.error === "oversize") {
+      showBootError("句子太長了，請回到出題頁改短一點再產生網址。");
+      return;
+    }
+    if (parsed.error) {
+      showBootError("網址不完整或無法讀取。請用出題頁重新產生連結。");
+      return;
+    }
+    boot(levelFromTeacherPayload(parsed.payload), ENTRANCE_FALLBACK);
+  }
+
+  if (document.body.getAttribute("data-from-hash") === "1") {
+    bootFromHash();
+    window.addEventListener("hashchange", function () {
+      location.reload();
+    });
+    return;
+  }
+
   var levelId = document.body.getAttribute("data-level-id");
   if (!levelId) {
     console.error("Missing data-level-id on body");
@@ -384,10 +482,6 @@
     })
     .catch(function (err) {
       console.error(err);
-      var msg = document.getElementById("message");
-      if (msg) {
-        msg.className = "visible fail";
-        msg.textContent = "關卡資料載入失敗。請用靜態伺服器開啟 site/。";
-      }
+      showBootError("關卡資料載入失敗。請用靜態伺服器開啟 site/。");
     });
 })();

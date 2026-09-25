@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <title>島嶼餐桌 · 我要出題</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #3d4a42;
+      --bg: #f4f7f2;
+      --card: #ffffff;
+      --line: #c5d4c8;
+      --accent: #0f766e;
+      --btn: #1e6bb8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 40px 28px 80px;
+      font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      max-width: 760px;
+      margin-inline: auto;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin: 0 0 0.4rem;
+      color: var(--accent);
+    }
+    .lead {
+      font-size: 1.25rem;
+      color: var(--muted);
+      margin: 0 0 1.75rem;
+    }
+    form {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.5rem 1.6rem 1.75rem;
+    }
+    label.field {
+      display: block;
+      margin-bottom: 1.15rem;
+    }
+    label.field span {
+      display: block;
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    input[type="text"],
+    textarea {
+      width: 100%;
+      font: inherit;
+      font-size: 1.35rem;
+      padding: 0.7rem 0.85rem;
+      border: 2px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fff;
+    }
+    textarea {
+      min-height: 4.5rem;
+      resize: vertical;
+    }
+    input:focus-visible,
+    textarea:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .check {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      font-size: 1.2rem;
+      margin: 0.5rem 0 1.4rem;
+      line-height: 1.45;
+    }
+    .check input {
+      width: 1.4rem;
+      height: 1.4rem;
+      margin-top: 0.2rem;
+      flex-shrink: 0;
+    }
+    #btn-make {
+      font: inherit;
+      font-size: 1.45rem;
+      font-weight: 700;
+      padding: 0.85rem 1.4rem;
+      border: none;
+      border-radius: 12px;
+      background: var(--btn);
+      color: #fff;
+      cursor: pointer;
+    }
+    #btn-make:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    #btn-make:not(:disabled):hover {
+      filter: brightness(1.06);
+    }
+    #result {
+      display: none;
+      margin-top: 1.75rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.35rem 1.5rem;
+    }
+    #result.visible { display: block; }
+    #result h2 {
+      font-size: 1.4rem;
+      margin: 0 0 0.5rem;
+      color: var(--accent);
+    }
+    .projector {
+      font-size: 1.2rem;
+      margin: 0 0 1rem;
+      color: var(--muted);
+    }
+    #out-url {
+      display: block;
+      width: 100%;
+      font-size: 1.05rem;
+      padding: 0.75rem 0.85rem;
+      border: 2px solid var(--line);
+      border-radius: 10px;
+      background: #f8faf7;
+      word-break: break-all;
+      margin-bottom: 0.9rem;
+      min-height: 3.2rem;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .actions button,
+    .actions a {
+      font: inherit;
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding: 0.65rem 1.1rem;
+      border-radius: 10px;
+      text-decoration: none;
+    }
+    #btn-copy {
+      border: 2px solid var(--accent);
+      background: #fff;
+      color: var(--accent);
+      cursor: pointer;
+    }
+    #btn-copy:hover { background: #e8f5f2; }
+    #try-link {
+      background: var(--accent);
+      color: #fff;
+    }
+    #try-link:hover { filter: brightness(1.06); }
+    #copy-status {
+      font-size: 1.05rem;
+      color: var(--muted);
+    }
+    .back {
+      display: inline-block;
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      color: var(--btn);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .back:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>我要出題</h1>
+  <p class="lead">填完就產生投影用網址。不會存到伺服器，也不會改官方關卡。</p>
+
+  <form id="make-form" novalidate>
+    <label class="field">
+      <span>動物名稱</span>
+      <input type="text" id="animal" name="animal" required autocomplete="off" />
+    </label>
+    <label class="field">
+      <span>對的對象</span>
+      <input type="text" id="correct" name="correct" required autocomplete="off" />
+    </label>
+    <label class="field">
+      <span>錯的對象</span>
+      <input type="text" id="wrong" name="wrong" required autocomplete="off" />
+    </label>
+    <label class="field">
+      <span>過關句</span>
+      <textarea id="success" name="success" required></textarea>
+    </label>
+    <label class="field">
+      <span>失敗句</span>
+      <textarea id="failure" name="failure" required></textarea>
+    </label>
+
+    <label class="check">
+      <input type="checkbox" id="checked" name="checked" />
+      <span>這句我核對過：能不能吃、是帶走種子還是傳粉</span>
+    </label>
+
+    <button type="submit" id="btn-make" disabled>產生投影網址</button>
+  </form>
+
+  <div id="result" aria-live="polite">
+    <h2>你的投影網址</h2>
+    <p class="projector">把下面這個網址在投影機上打開即可。</p>
+    <div id="out-url" tabindex="0"></div>
+    <div class="actions">
+      <button type="button" id="btn-copy">複製網址</button>
+      <a id="try-link" href="#" target="_blank" rel="noopener">試玩看看</a>
+      <span id="copy-status"></span>
+    </div>
+  </div>
+
+  <a class="back" href="/teacher">回老師頁</a>
+
+  <script>
+    (function () {
+      var MAX_HASH = 3500;
+      var animal = document.getElementById("animal");
+      var correct = document.getElementById("correct");
+      var wrong = document.getElementById("wrong");
+      var success = document.getElementById("success");
+      var failure = document.getElementById("failure");
+      var checked = document.getElementById("checked");
+      var btnMake = document.getElementById("btn-make");
+      var form = document.getElementById("make-form");
+      var result = document.getElementById("result");
+      var outUrl = document.getElementById("out-url");
+      var tryLink = document.getElementById("try-link");
+      var btnCopy = document.getElementById("btn-copy");
+      var copyStatus = document.getElementById("copy-status");
+      var fields = [animal, correct, wrong, success, failure];
+
+      function allFilled() {
+        for (var i = 0; i < fields.length; i++) {
+          if (!fields[i].value.trim()) return false;
+        }
+        return true;
+      }
+
+      function syncButton() {
+        btnMake.disabled = !(allFilled() && checked.checked);
+      }
+
+      fields.forEach(function (el) {
+        el.addEventListener("input", syncButton);
+      });
+      checked.addEventListener("change", syncButton);
+      syncButton();
+
+      function playOrigin() {
+        return location.origin + "/play";
+      }
+
+      function buildHash() {
+        var payload = {
+          a: animal.value.trim(),
+          c: correct.value.trim(),
+          w: wrong.value.trim(),
+          s: success.value.trim(),
+          f: failure.value.trim()
+        };
+        return encodeURIComponent(JSON.stringify(payload));
+      }
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!allFilled() || !checked.checked) return;
+        var hash = buildHash();
+        if (hash.length > MAX_HASH) {
+          result.classList.add("visible");
+          outUrl.textContent = "";
+          tryLink.removeAttribute("href");
+          copyStatus.textContent = "句子太長了，請改短一點再產生網址。";
+          return;
+        }
+        var url = playOrigin() + "#" + hash;
+        outUrl.textContent = url;
+        tryLink.href = url;
+        copyStatus.textContent = "";
+        result.classList.add("visible");
+        result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+
+      btnCopy.addEventListener("click", function () {
+        var text = outUrl.textContent;
+        if (!text) return;
+        function done() {
+          copyStatus.textContent = "已複製";
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(function () {
+            window.prompt("請手動複製：", text);
+          });
+        } else {
+          window.prompt("請手動複製：", text);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
