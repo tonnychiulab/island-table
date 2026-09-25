@@ -149,6 +149,31 @@
     .node.plant { background: var(--plant); }
     .node.wrong { background: var(--wrong); }
 
+    .node.shake {
+      animation: shake-once 0.45s ease;
+    }
+    @keyframes shake-once {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-10px); }
+      40% { transform: translateX(10px); }
+      60% { transform: translateX(-7px); }
+      80% { transform: translateX(7px); }
+    }
+
+    .fx-dot {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      margin-left: -9px;
+      margin-top: -9px;
+      border-radius: 50%;
+      background: #4a2f14;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+      z-index: 6;
+      pointer-events: none;
+      transition: left 0.75s ease, top 0.75s ease;
+    }
+
     #animal { left: 90px; top: 280px; }
     #correct { left: 520px; top: 180px; }
     #wrong { left: 900px; top: 360px; }
@@ -206,6 +231,7 @@
     #message.fail { border-color: var(--wrong); }
     #message.ok { border-color: var(--plant); }
     #message.hint { border-color: #b8860b; }
+    #message .msg-line + .msg-line { margin-top: 0.35em; }
   </style>
 </head>
 <body>
@@ -236,12 +262,14 @@
   <script>
     (function () {
       var ORDER = ["correct", "wrong"];
+      var ENTRANCE_TEXT = "幕後人：走岔一步不要緊，肯回頭便是正道。";
       var FAIL_TEXT = "山蘇靠孢子，不是五色鳥播的。";
       var OK_TEXT = "五色鳥吃下榕果，種子到別處。這是帶走種子。";
       var MISS_TEXT = "還缺榕果。";
 
       var selected = [];
       var phase = "play"; // play | fail | success | hint
+      var okTimer = null;
 
       var stage = document.getElementById("stage");
       var routeLine = document.getElementById("route-line");
@@ -257,6 +285,40 @@
         correct: document.getElementById("correct"),
         wrong: document.getElementById("wrong")
       };
+
+      function clearFx() {
+        ORDER.forEach(function (id) {
+          nodeEls[id].classList.remove("shake");
+        });
+        var dots = stage.querySelectorAll(".fx-dot");
+        for (var i = 0; i < dots.length; i++) dots[i].parentNode.removeChild(dots[i]);
+        if (okTimer) {
+          clearTimeout(okTimer);
+          okTimer = null;
+        }
+      }
+
+      function shakeOnce(el) {
+        el.classList.remove("shake");
+        void el.offsetWidth;
+        el.classList.add("shake");
+      }
+
+      function playSeedAwayThenOk() {
+        var from = centerOf(nodeEls.correct);
+        var dot = document.createElement("div");
+        dot.className = "fx-dot";
+        dot.style.left = from.x + "px";
+        dot.style.top = from.y + "px";
+        stage.appendChild(dot);
+        void dot.offsetWidth;
+        dot.style.left = (from.x + 160) + "px";
+        dot.style.top = (from.y - 90) + "px";
+        okTimer = setTimeout(function () {
+          okTimer = null;
+          if (phase === "success") setMessage(OK_TEXT, "ok");
+        }, 780);
+      }
 
       function scaleStage() {
         var w = window.innerWidth;
@@ -282,13 +344,24 @@
       }
 
       function setMessage(text, kind) {
+        messageEl.innerHTML = "";
         if (!text) {
           messageEl.className = "";
-          messageEl.textContent = "";
           messageEl.classList.remove("visible");
           return;
         }
-        messageEl.textContent = text;
+        if (kind === "fail") {
+          var lead = document.createElement("div");
+          lead.className = "msg-line";
+          lead.textContent = ENTRANCE_TEXT;
+          var science = document.createElement("div");
+          science.className = "msg-line";
+          science.textContent = text;
+          messageEl.appendChild(lead);
+          messageEl.appendChild(science);
+        } else {
+          messageEl.textContent = text;
+        }
         messageEl.className = "visible " + (kind || "");
       }
 
@@ -306,6 +379,7 @@
         ORDER.forEach(function (id) {
           nodeEls[id].classList.remove("selected");
         });
+        clearFx();
         setMessage("");
         drawRoute();
         syncButtons();
@@ -339,13 +413,17 @@
 
         if (hasWrong) {
           phase = "fail";
+          clearFx();
+          shakeOnce(nodeEls.wrong);
           setMessage(FAIL_TEXT, "fail");
           syncButtons();
           return;
         }
 
         phase = "success";
-        setMessage(OK_TEXT, "ok");
+        clearFx();
+        setMessage("");
+        playSeedAwayThenOk();
         syncButtons();
       }
 
@@ -385,6 +463,7 @@
         getSelected: function () { return selected.slice(); },
         getPhase: function () { return phase; },
         getMessage: function () { return messageEl.textContent; },
+        ENTRANCE_TEXT: ENTRANCE_TEXT,
         FAIL_TEXT: FAIL_TEXT,
         OK_TEXT: OK_TEXT,
         MISS_TEXT: MISS_TEXT

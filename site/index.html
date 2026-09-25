@@ -151,6 +151,21 @@
     .node.bear { background: var(--bear); color: #f0f0f0; }
     .node.pot { background: var(--pot); }
 
+    .node.shake {
+      animation: shake-once 0.45s ease;
+    }
+    @keyframes shake-once {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-10px); }
+      40% { transform: translateX(10px); }
+      60% { transform: translateX(-7px); }
+      80% { transform: translateX(7px); }
+    }
+    .node.bright {
+      filter: brightness(1.35);
+      box-shadow: 0 0 0 6px rgba(255, 255, 180, 0.95), 0 8px 24px rgba(46, 139, 87, 0.5);
+    }
+
     #magpie { left: 90px; top: 280px; }
     #sansu { left: 420px; top: 160px; }
     #aiyu { left: 420px; top: 420px; }
@@ -210,6 +225,7 @@
     #message.fail { border-color: var(--pot); }
     #message.ok { border-color: var(--plant); }
     #message.hint { border-color: #b8860b; }
+    #message .msg-line + .msg-line { margin-top: 0.35em; }
   </style>
 </head>
 <body>
@@ -243,6 +259,7 @@
     (function () {
       var ORDER = ["sansu", "aiyu", "bear", "pot"];
       var LABELS = { sansu: "山蘇", aiyu: "愛玉", bear: "黑熊", pot: "鍋" };
+      var ENTRANCE_TEXT = "幕後人：走岔一步不要緊，肯回頭便是正道。";
       var FAIL_TEXT =
         "有人以前靠山林生活，打獵有自己的規矩。現在這些動物受保護，遊戲裡不能拿去煮。";
       var OK_TEXT =
@@ -268,6 +285,18 @@
         pot: document.getElementById("pot")
       };
 
+      function clearFx() {
+        ORDER.forEach(function (id) {
+          nodeEls[id].classList.remove("shake", "bright");
+        });
+      }
+
+      function shakeOnce(el) {
+        el.classList.remove("shake");
+        void el.offsetWidth;
+        el.classList.add("shake");
+      }
+
       function scaleStage() {
         var w = window.innerWidth;
         var h = window.innerHeight;
@@ -292,13 +321,24 @@
       }
 
       function setMessage(text, kind) {
+        messageEl.innerHTML = "";
         if (!text) {
           messageEl.className = "";
-          messageEl.textContent = "";
           messageEl.classList.remove("visible");
           return;
         }
-        messageEl.textContent = text;
+        if (kind === "fail") {
+          var lead = document.createElement("div");
+          lead.className = "msg-line";
+          lead.textContent = ENTRANCE_TEXT;
+          var science = document.createElement("div");
+          science.className = "msg-line";
+          science.textContent = text;
+          messageEl.appendChild(lead);
+          messageEl.appendChild(science);
+        } else {
+          messageEl.textContent = text;
+        }
         messageEl.className = "visible " + (kind || "");
       }
 
@@ -316,6 +356,7 @@
         ORDER.forEach(function (id) {
           nodeEls[id].classList.remove("selected");
         });
+        clearFx();
         setMessage("");
         drawRoute();
         syncButtons();
@@ -354,12 +395,17 @@
 
         if (hasBear && hasPot) {
           phase = "fail";
+          clearFx();
+          shakeOnce(nodeEls.pot);
           setMessage(FAIL_TEXT, "fail");
           syncButtons();
           return;
         }
 
         phase = "success";
+        clearFx();
+        nodeEls.sansu.classList.add("bright");
+        nodeEls.aiyu.classList.add("bright");
         setMessage(OK_TEXT, "ok");
         syncButtons();
       }
@@ -401,6 +447,7 @@
         getSelected: function () { return selected.slice(); },
         getPhase: function () { return phase; },
         getMessage: function () { return messageEl.textContent; },
+        ENTRANCE_TEXT: ENTRANCE_TEXT,
         FAIL_TEXT: FAIL_TEXT,
         OK_TEXT: OK_TEXT
       };
