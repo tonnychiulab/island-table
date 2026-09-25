@@ -58,16 +58,41 @@
     }
     ul { margin: 0.4rem 0 0; padding-left: 1.25rem; }
     li { margin: 0.25rem 0; }
+    .levels a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .levels a:hover { text-decoration: underline; }
+    .levels li { margin: 0.4rem 0; }
+    .note {
+      background: #f0f4ee;
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      margin-top: 0.6rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
   </style>
 </head>
 <body>
   <h1>島嶼餐桌 · 老師頁</h1>
   <p class="lead">給老師備課用。孩子遊戲畫面不連到本頁、也不放引用。</p>
 
+  <section class="levels">
+    <h2>課堂關卡</h2>
+    <ul>
+      <li><a href="/">藍鵲播種</a>（第一局，站台根路徑）</li>
+      <li><a href="/barbet">五色鳥</a></li>
+      <li><a href="/macaque">台灣獼猴</a></li>
+      <li><a href="/butterfly">寬尾鳳蝶</a></li>
+    </ul>
+  </section>
+
   <section>
     <h2>山蘇</h2>
     <p>林下常見的可食用蕨類（鳥巢蕨一類），可炒來吃；遊戲成功句寫「山蘇可以炒來吃」。</p>
-    <p class="src">來源類型：農業與食材公開知識可對照林業及自然保育署／農業相關公開資料中的山蘇（鳥巢蕨）食材說明。</p>
+    <p class="src">來源類型：林業及自然保育署、農業部生物多樣性研究所／原特生中心。</p>
   </section>
 
   <section>
@@ -76,7 +101,7 @@
       學名 <span class="latin">Ficus pumila</span> var. <span class="latin">awkeotsang</span>（愛玉子）。
       食物是果實搓出的膠做成愛玉凍／愛玉冰，不是宣稱整株生吃。
     </p>
-    <p class="src">來源類型：特有生物研究保育中心、林業及自然保育署等公開保育／物種資料中的愛玉子事實。</p>
+    <p class="src">來源類型：林業及自然保育署、農業部生物多樣性研究所／原特生中心。</p>
   </section>
 
   <section>
@@ -85,7 +110,7 @@
       學名 <span class="latin">Ursus thibetanus formosanus</span>。
       受保護，不是食材。遊戲裡與「鍋」同時在路線上才失敗。
     </p>
-    <p class="src">來源類型：林業及自然保育署公開資料（台灣黑熊為受保護野生動物）。</p>
+    <p class="src">來源類型：林業及自然保育署。</p>
   </section>
 
   <section>
@@ -94,7 +119,34 @@
       學名 <span class="latin">Urocissa caerulea</span>。
       台灣特有種。「播種」是遊戲動詞，不是宣稱藍鵲會耕種山蘇或愛玉。
     </p>
-    <p class="src">來源類型：特有生物研究保育中心、林業及自然保育署等公開資料中的台灣藍鵲（特有種）事實。</p>
+    <p class="src">來源類型：林業及自然保育署、農業部生物多樣性研究所／原特生中心。</p>
+  </section>
+
+  <section>
+    <h2>五色鳥 · 榕果</h2>
+    <p>遊戲教帶走種子：五色鳥吃榕果，種子到別處。山蘇靠孢子，不是五色鳥播的。</p>
+    <p class="note">
+      榕果指榕樹、雀榕這一類榕屬果實，不是愛玉。榕果傳粉是榕果小蜂，不進投影句。
+    </p>
+    <p class="src">來源類型：林業及自然保育署、農業部生物多樣性研究所／原特生中心、林業試驗所。</p>
+  </section>
+
+  <section>
+    <h2>台灣獼猴 · 長葉木薑子</h2>
+    <p>遊戲教帶走種子：頰囊把長葉木薑子的種子帶到別處。連到花不是帶走種子。</p>
+    <p class="note">
+      台灣獼猴這一關用長葉木薑子，因為頰囊會把種子帶到別處。不要寫成愛玉。
+    </p>
+    <p class="src">來源類型：林業及自然保育署、農業部生物多樣性研究所／原特生中心、林業試驗所。</p>
+  </section>
+
+  <section>
+    <h2>寬尾鳳蝶 · 花</h2>
+    <p>遊戲只教訪花傳粉。投影句不指定某一種花，也不說寬尾鳳蝶傳粉愛玉或榕果。</p>
+    <p class="note">
+      寬尾鳳蝶幼蟲的野生食草是台灣檫樹；這一關投影只教訪花傳粉，不指定某一種花。
+    </p>
+    <p class="src">來源類型：林業及自然保育署、農業部生物多樣性研究所／原特生中心、林業試驗所。</p>
   </section>
 
   <section class="rules">
@@ -102,7 +154,8 @@
     <ul>
       <li>不要使用「物競天擇」。</li>
       <li>不要點名特定原住民族。</li>
-      <li>失敗句與遊戲頁相同：「有人以前靠山林生活，打獵有自己的規矩。現在這些動物受保護，遊戲裡不能拿去煮。」</li>
+      <li>第一局失敗句與遊戲頁相同：「有人以前靠山林生活，打獵有自己的規矩。現在這些動物受保護，遊戲裡不能拿去煮。」</li>
+      <li>遊戲頁彼此不互連；孩子畫面不連到本頁。</li>
     </ul>
   </section>
 </body>
