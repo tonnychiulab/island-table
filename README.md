@@ -6,11 +6,11 @@
 
 部署後老師開啟：
 
-https://island-table.onrender.com
+https://island-table-r050.onrender.com
 
 老師備課頁（遊戲頁**沒有**連到這裡）：
 
-https://island-table.onrender.com/teacher
+https://island-table-r050.onrender.com/teacher
 
 ## 本機遊玩
 

@@ -310,7 +310,7 @@ art/atlas/                （後續）自製剪影與標籤
 | 項目 | 決定 |
 | --- | --- |
 | 形態 | **Render 靜態站**，不是桌面 exe，不是 Godot 建置。 |
-| 老師怎麼開 | 開啟 `https://island-table.onrender.com`，用瀏覽器投影。版面 1280×720。 |
+| 老師怎麼開 | 開啟 `https://island-table-r050.onrender.com`，用瀏覽器投影。版面 1280×720。老師備課頁：`https://island-table-r050.onrender.com/teacher`（遊戲頁不連過去）。 |
 | 自動部署 | 推送到 GitHub 分支 **main** 即自動部署。 |
 | 網域 | 預設用 onrender.com。除非學校打不開，否則不做自訂網域。 |
 | 原始碼 | **公開** GitHub 儲存庫，名稱 `island-table`。授權 **MIT**；著作權行：`Copyright (c) 2026 島嶼餐桌`（不寫個人姓名）。 |
