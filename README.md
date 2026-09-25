@@ -38,6 +38,7 @@ python -m http.server 8080
 
 - 公開 GitHub 儲存庫名稱：`island-table`
 - 授權：MIT（Copyright (c) 2026 島嶼餐桌）
+- 瀏覽器分頁圖示 `site/favicon.svg` 為原創幾何標記（藍圓，對應藍鵲節點色），非物種插圖、非 Kenney 素材；同樣適用 MIT（Copyright (c) 2026 島嶼餐桌）。
 - Render 靜態站：見 `render.yaml`
   - 發布目錄：`site/`
   - 無 build command、無環境變數
@@ -49,6 +50,7 @@ python -m http.server 8080
 | 路徑 | 說明 |
 | --- | --- |
 | `site/index.html` | 遊戲（孩子頁） |
+| `site/favicon.svg` | 分頁圖示（原創幾何標記） |
 | `site/teacher/index.html` | 老師頁 |
 | `docs/` | 設計文件（不進靜態站） |
 | `render.yaml` | Render 靜態站設定 |
