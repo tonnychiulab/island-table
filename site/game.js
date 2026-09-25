@@ -1,5 +1,5 @@
 (function () {
-  var ENTRANCE_FALLBACK = "幕後人：走岔一步不要緊，肯回頭便是正道。";
+  var ENTRANCE_FALLBACK = "走岔一步不要緊，肯回頭便是正道。";
 
   function scriptBase() {
     var scripts = document.getElementsByTagName("script");

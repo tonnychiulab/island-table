@@ -20,7 +20,7 @@ PAGES = {
     "butterfly": (ROOT / "site" / "butterfly" / "index.html").read_text(encoding="utf-8"),
 }
 
-ENTRANCE = "幕後人：走岔一步不要緊，肯回頭便是正道。"
+ENTRANCE = "走岔一步不要緊，肯回頭便是正道。"
 FORBIDDEN_NAME = "\u85cf\u93e1\u4eba"
 
 
@@ -109,7 +109,7 @@ def check_teacher():
     for needle in [
         "課堂進行步驟",
         "全螢幕",
-        "幕後人",
+        "走岔一步不要緊，肯回頭便是正道。",
         "再試一次",
         "出發",
         "再玩一次",
