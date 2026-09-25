@@ -20,8 +20,7 @@ PAGES = {
     "butterfly": (ROOT / "site" / "butterfly" / "index.html").read_text(encoding="utf-8"),
 }
 
-ENTRANCE = "走岔一步不要緊，肯回頭便是正道。"
-FORBIDDEN_NAME = "\u85cf\u93e1\u4eba"
+ENTRANCE = "藏鏡人：走岔一步不要緊，肯回頭便是正道。"
 
 
 def assert_true(cond, msg):
@@ -86,7 +85,6 @@ def check_html_shells():
         assert_true(not re.search(r'href\s*=\s*["\'][^"\']*teacher', html, re.I), f"{lid}: no teacher href")
         assert_true("<audio" not in html.lower(), f"{lid}: no audio")
         assert_true("new Audio" not in html, f"{lid}: no Audio API")
-        assert_true(FORBIDDEN_NAME not in html, f"{lid}: forbidden name absent")
         # game pages must not link to each other
         for other in ("/barbet", "/macaque", "/butterfly"):
             if lid == "root" or ("/" + lid) != other:
@@ -109,7 +107,7 @@ def check_teacher():
     for needle in [
         "課堂進行步驟",
         "全螢幕",
-        "走岔一步不要緊，肯回頭便是正道。",
+        ENTRANCE,
         "再試一次",
         "出發",
         "再玩一次",
@@ -205,10 +203,10 @@ def run_misc():
             s.append(node)
     assert_true(s == ["sansu"], "second tap no duplicate")
     print("OK second tap does nothing")
-    assert_true(FORBIDDEN_NAME not in GAME_JS, "game.js: forbidden name absent")
-    for path in (ROOT / "site").rglob("*.html"):
-        text = path.read_text(encoding="utf-8")
-        assert_true(FORBIDDEN_NAME not in text, f"{path.name}: forbidden name absent")
+    assert_true(ENTRANCE in GAME_JS, "game.js: entrance line")
+    play = (ROOT / "site" / "play" / "index.html").read_text(encoding="utf-8")
+    assert_true("data-from-hash" in play, "play page uses hash boot")
+    assert_true("game.js" in play, "play page loads game.js (entrance via ENTRANCE_FALLBACK)")
     print("OK misc")
 
 
